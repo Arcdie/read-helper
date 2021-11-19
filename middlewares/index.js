@@ -8,7 +8,6 @@ const favicon = require('serve-favicon');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
-require('../libs/redis');
 require('../libs/mongodb');
 const morgan = require('../libs/morgan');
 
@@ -16,7 +15,7 @@ const log = require('../libs/logger');
 
 const app = express();
 
-const frontFolder = path.join(__dirname, '../../trading-helper-front');
+const frontFolder = path.join(__dirname, '../');
 
 // app.use(helmet());
 

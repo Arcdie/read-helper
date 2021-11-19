@@ -1,0 +1,23 @@
+doctype html
+
+head
+	include ./includes/head
+	
+body
+	include ./includes/header
+	
+	.pop-up
+		.md-modal
+			.md-content
+
+		.shadow
+
+	block content
+
+	include ./includes/footer
+	
+	script(src='/libs/jquery-3.6.0.min.js')
+	script(src='/javascripts/pop-up-windows.js')
+	script(src='/javascripts/common-functions.js')
+
+	block scripts
