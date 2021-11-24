@@ -2,7 +2,6 @@ const log = require('../libs/logger');
 
 const memoryUsage = require('./memory-usage');
 
-
 module.exports = async () => {
   // check memory
   /*

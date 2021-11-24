@@ -1,0 +1,17 @@
+extends ../../app
+
+block variables
+	-
+		const pageTitle = 'Авторизация';
+
+block content
+	.page.auth
+		h1 Авторизация
+		
+		input#name(type="text", placeholder="Name")
+		button#login Войти
+
+		a(href='/auth/registration') Зарегистрироваться
+	
+block scripts
+	script(src='/javascripts/auth/login.js')

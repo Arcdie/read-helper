@@ -1,0 +1,17 @@
+extends ../../app
+
+block variables
+	-
+		const pageTitle = 'Регистрация';
+
+block content
+	.page.auth
+		h1 Регистрация
+		
+		input#name(type="text", placeholder="Name")
+		button#registration Зарегистрироваться
+		
+		a(href='/auth/login') Вход
+	
+block scripts
+	script(src='/javascripts/auth/registration.js')
