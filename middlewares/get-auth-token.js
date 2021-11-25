@@ -10,7 +10,6 @@ module.exports = (req, res, next) => {
   }
 
   const verifiedToken = verifyToken(token);
-  console.log('verifiedToken', verifiedToken);
 
   if (!verifiedToken) {
     res.clearCookie('token');

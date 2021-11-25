@@ -8,7 +8,7 @@ module.exports = async (req, res, next) => {
   } = req;
 
   if (!user) {
-    return res.redirect('/');
+    return res.redirect('/auth/login');
   }
 
   const resultGetUser = await getUserById({

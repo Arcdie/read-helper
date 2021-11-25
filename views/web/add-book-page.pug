@@ -1,0 +1,23 @@
+extends ../app
+
+block variables
+	-
+		const pageTitle = 'Добавить книгу';
+
+block content
+	.page.add-book
+		input.book-name(type="text", placeholder="Book name")
+		
+		.book-cover.file
+			label(for='book-cover') Book cover
+			input(type='file' name='book-cover' accept=".jpg, .jpeg, .png")
+			
+		.book-file.file
+			label(for='book-file') Book file (pdf only)
+			input(type='file' name='book-file' accept=".pdf")
+
+		button#save-book Save
+
+block scripts
+	//- script(src='/libs/font-awesome.min.js')
+	script(src='/javascripts/web/add-book.js')

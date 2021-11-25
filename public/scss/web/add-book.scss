@@ -1,0 +1,16 @@
+.add-book {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  .book-name {
+    margin-bottom: 10px;
+  }
+
+  .file {
+    width: 405px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+}
