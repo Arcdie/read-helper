@@ -6,6 +6,6 @@ module.exports = async (req, res, next) => {
   if (!user) {
     res.redirect('/auth/login');
   } else {
-    res.redirect('/bookcase');
+    res.redirect('/books');
   }
 };

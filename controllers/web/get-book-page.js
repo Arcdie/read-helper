@@ -40,7 +40,7 @@ module.exports = async (req, res, next) => {
   const bookDoc = resultGetBook.result;
 
   res.render('web/book-page', {
-    pageTitle: `Книга ${bookDoc.name}`,
+    pageTitle: `Book ${bookDoc.name}`,
     bookDoc,
   });
 };

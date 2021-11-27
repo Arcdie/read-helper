@@ -234,6 +234,59 @@ input:checked + .slider:before {
   display: block;
   margin-bottom: 10px; }
 
+.book {
+  display: flex; }
+  .book .row {
+    display: flex; }
+  .book .book-cover {
+    width: 300px; }
+    .book .book-cover img {
+      width: 100%; }
+    .book .book-cover a.read {
+      width: 100%;
+      height: 20px;
+      border: 1px solid black;
+      display: inline-block;
+      text-decoration: none;
+      color: black;
+      text-align: center;
+      padding: 10px 0;
+      margin-top: 10px; }
+      .book .book-cover a.read:hover {
+        background-color: black;
+        color: white; }
+
+.books .bookshelf-container {
+  width: 100%; }
+  .books .bookshelf-container .shelf {
+    width: 100%;
+    height: 300px;
+    display: flex;
+    border-bottom: 1px solid black;
+    justify-content: space-evenly; }
+    .books .bookshelf-container .shelf .book {
+      width: 10%;
+      height: 100%;
+      cursor: pointer;
+      display: flex;
+      text-decoration: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column; }
+      .books .bookshelf-container .shelf .book img {
+        width: 100%; }
+      .books .bookshelf-container .shelf .book p {
+        color: black;
+        margin-top: 10px; }
+    .books .bookshelf-container .shelf .add-book {
+      width: 10%;
+      height: 100%;
+      cursor: pointer;
+      display: flex;
+      justify-content: center; }
+      .books .bookshelf-container .shelf .add-book img {
+        width: 100%; }
+
 .add-book {
   display: flex;
   flex-direction: column;
@@ -245,34 +298,3 @@ input:checked + .slider:before {
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px; }
-
-.bookcase .bookshelf-container {
-  width: 100%; }
-  .bookcase .bookshelf-container .shelf {
-    width: 100%;
-    height: 300px;
-    display: flex;
-    border-bottom: 1px solid black;
-    justify-content: space-evenly; }
-    .bookcase .bookshelf-container .shelf .book {
-      width: 10%;
-      height: 100%;
-      cursor: pointer;
-      display: flex;
-      text-decoration: none;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column; }
-      .bookcase .bookshelf-container .shelf .book img {
-        width: 100%; }
-      .bookcase .bookshelf-container .shelf .book p {
-        color: black;
-        margin-top: 10px; }
-    .bookcase .bookshelf-container .shelf .add-book {
-      width: 10%;
-      height: 100%;
-      cursor: pointer;
-      display: flex;
-      justify-content: center; }
-      .bookcase .bookshelf-container .shelf .add-book img {
-        width: 100%; }

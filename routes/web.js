@@ -11,11 +11,12 @@ const commonMiddlewares = [
 ];
 
 router.get('/', commonMiddlewares, webControllers.getMainPage);
+router.get('/test', commonMiddlewares, webControllers.getTestPage);
 
 router.get('/books/:id', commonMiddlewares, webControllers.getBookPage);
 router.get('/books/:id/read', commonMiddlewares, webControllers.getReadBookPage);
 
-router.get('/bookcase', commonMiddlewares, webControllers.getBookcasePage);
-router.get('/bookcase/add', commonMiddlewares, webControllers.getAddBookPage);
+router.get('/books', commonMiddlewares, webControllers.getBooksPage);
+router.get('/books/add', commonMiddlewares, webControllers.getAddBookPage);
 
 module.exports = router;

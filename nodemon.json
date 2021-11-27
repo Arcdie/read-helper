@@ -1,3 +1,3 @@
 {
-  "ignore": ["public", "views"]
+  "ignore": ["public/javascripts", "public/pdf-viewer", "views"]
 }

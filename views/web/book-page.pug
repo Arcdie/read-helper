@@ -4,6 +4,10 @@ block variables
 
 block content
 	.page.book
+		.row
+			.book-cover
+				img(src= `${bookDoc.path_to_book}/book-cover-image.png`, alt='book-cover')
+				a.read(href= `/books/${bookDoc._id}/read`) Read
 
 block scripts
 	script(src='/javascripts/web/book.js')
