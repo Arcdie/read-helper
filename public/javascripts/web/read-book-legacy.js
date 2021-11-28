@@ -12,7 +12,7 @@ const processedPages = [];
 
 /* JQuery */
 
-const $readBookContainer = $('.read-book');
+const $readBookContainer = $('.read-book-legacy');
 
 $(document).ready(async () => {
   try {
@@ -57,15 +57,20 @@ $(document).ready(async () => {
     });
     */
 
-    /*
     $readBookContainer
-      .on('click', () => {
-        autoSelectText();
+      .on('touchend', () => {
+        const text = autoSelectText();
+        alert(text);
 
-        const selectedText = window.getSelection();
-        console.log('selectedText.str', selectedText.toString());
+        if (window.getSelection().empty) {  // Chrome
+          window.getSelection().empty();
+        } else if (window.getSelection().removeAllRanges) {  // Firefox
+          window.getSelection().removeAllRanges();
+        }
+
+        // const selectedText = window.getSelection();
+        // alert(selectedText.toString());
       });
-    */
   } catch (err) {
     alert(err.message);
   }

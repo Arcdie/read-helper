@@ -223,6 +223,11 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%; }
 
+.test .events {
+  margin-top: 10px; }
+  .test .events span {
+    display: block; }
+
 .auth h1 {
   margin-bottom: 10px; }
 
