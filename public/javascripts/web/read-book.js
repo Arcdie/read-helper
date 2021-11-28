@@ -6,6 +6,7 @@ objects, PDFViewerApplication,
 /* Constants */
 
 const URL_GET_BOOK_BY_ID = '/api/books';
+const URL_SEND_MESSAGE = '/api/test/message';
 
 const processedPages = [];
 
@@ -14,52 +15,60 @@ const processedPages = [];
 const $readBookContainer = $('.read-book');
 
 $(document).ready(async () => {
-  const bookId = location.pathname.split('/')[2];
+  try {
+    const bookId = location.pathname.split('/')[2];
 
-  const resultGetBook = await makeRequest({
-    method: 'GET',
-    url: `${URL_GET_BOOK_BY_ID}/${bookId}`,
-  });
-
-  if (!resultGetBook || !resultGetBook.status) {
-    alert(resultGetBook.message || `Cant makeRequest ${URL_GET_BOOK_BY_ID}`);
-    return false;
-  }
-
-  const bookDoc = resultGetBook.result;
-  const pathToFile = `/books/${bookDoc._id}/book-file.pdf`;
-
-  await PDFViewerApplication.open(pathToFile);
-  // PDFViewerApplication.pdfLinkService.goToPage(2);
-
-  // PDFViewerApplication.pdfViewer.currentPageNumber
-
-  document.title = `Book ${bookDoc.name}`;
-
-  PDFViewerApplication.pdfOutlineViewer.eventBus._on('pagerendered', () => {
-    setTimeout(() => {
-      const currentPage = PDFViewerApplication.pdfViewer.currentPageNumber;
-      // processPage(currentPage - 1);
-    }, 3000);
-  });
-
-  PDFViewerApplication.pdfOutlineViewer.eventBus._on('pagechanging', evt => {
-    const { pageNumber } = evt;
-
-    const doesPageNumberProcessed = processedPages.includes(pageNumber);
-
-    if (!doesPageNumberProcessed) {
-      // processPage(pageNumber - 1);
-    }
-  });
-
-  $readBookContainer
-    .on('click', () => {
-      autoSelectText();
-
-      const selectedText = window.getSelection();
-      console.log('selectedText.str', selectedText.toString());
+    const resultGetBook = await makeRequest({
+      method: 'GET',
+      url: `${URL_GET_BOOK_BY_ID}/${bookId}`,
     });
+
+    if (!resultGetBook || !resultGetBook.status) {
+      alert(resultGetBook.message || `Cant makeRequest ${URL_GET_BOOK_BY_ID}`);
+      return false;
+    }
+
+    const bookDoc = resultGetBook.result;
+    const pathToFile = `/books/${bookDoc._id}/book-file.pdf`;
+
+    await PDFViewerApplication.open(pathToFile);
+    // PDFViewerApplication.pdfLinkService.goToPage(2);
+
+    // PDFViewerApplication.pdfViewer.currentPageNumber
+
+    document.title = `Book ${bookDoc.name}`;
+
+    /*
+    PDFViewerApplication.pdfOutlineViewer.eventBus._on('pagerendered', () => {
+      setTimeout(() => {
+        const currentPage = PDFViewerApplication.pdfViewer.currentPageNumber;
+        // processPage(currentPage - 1);
+      }, 3000);
+    });
+
+    PDFViewerApplication.pdfOutlineViewer.eventBus._on('pagechanging', evt => {
+      const { pageNumber } = evt;
+
+      const doesPageNumberProcessed = processedPages.includes(pageNumber);
+
+      if (!doesPageNumberProcessed) {
+        // processPage(pageNumber - 1);
+      }
+    });
+    */
+
+    /*
+    $readBookContainer
+      .on('click', () => {
+        autoSelectText();
+
+        const selectedText = window.getSelection();
+        console.log('selectedText.str', selectedText.toString());
+      });
+    */
+  } catch (err) {
+    alert(err.message);
+  }
 });
 
 const autoSelectText = () => {
