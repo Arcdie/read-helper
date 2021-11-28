@@ -4,17 +4,69 @@
   position: relative;
 }
 
-/* ::-moz-selection {
-  color: gold;
-  background: red;
+  .read-book-legacy button#print {
+    display: none;
+  }
+
+.add-phrase {
+  flex-direction: column;
+  position: absolute;
+  padding: 15px;
+  background-color: white;
+  box-shadow: 0 5px 20px 0 rgba(0, 0, 0, .2);
+  z-index: 99999;
+  display: none;
 }
+  .add-phrase.is_active {
+    display: flex;
+  }
 
-::selection {
-  color: gold;
-  background: red;
-} */
+  .row {
+    display: flex;
+  }
 
+  .add-phrase p {
+    margin-bottom: 10px;
+  }
+    .add-phrase p span.phrase {
+      font-weight: bold;
+    }
 
-/* .read-book span i:hover {
-  background-color: red;
-} */
+    .add-phrase p span.translation {
+
+    }
+
+  .add-phrase button.close {
+    position: relative;
+    right: -9px;
+    top: -10px;
+    border: 1px solid black;
+    /* padding: 3px; */
+    border-radius: 300px;
+    width: 22px;
+    height: 22px;
+    text-align: center;
+    display: inline-block;
+    background-color: transparent;
+    cursor: pointer;
+
+    &:hover {
+      background-color: black;
+      color: white;
+    }
+  }
+
+  .add-phrase button.save {
+    padding: 7px;
+    font-size: 16px;
+    color: white;
+    background-color: #79c257;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+      opacity: .8;
+    }
+  }
+}

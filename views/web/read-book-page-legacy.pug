@@ -252,6 +252,17 @@ html(dir='ltr' mozdisallowselectionprint='')
 				// overlayContainer
 				// outerContainer
 				#printContainer
+				
+		.add-phrase
+			.row
+				p
+					span.phrase
+					|  - 
+					span.translation
+				
+				button.close x
+				
+			button.save + В словарь
 
 		script(src='/libs/jquery.min.js')
 		script(src='/pdf-viewer-legacy/libs/pdf.min.js')

@@ -6,12 +6,12 @@ objects, PDFViewerApplication,
 /* Constants */
 
 const URL_GET_BOOK_BY_ID = '/api/books';
-const URL_SEND_MESSAGE = '/api/test/message';
-
-const processedPages = [];
+const URL_SAVE_USER_PHRASE = '/api/user-phrases';
+const URL_TRANSLATE_PHRASE = '/api/quizlet/translate-phrase';
 
 /* JQuery */
 
+const $addPhrase = $('.add-phrase');
 const $readBookContainer = $('.read-book-legacy');
 
 $(document).ready(async () => {
@@ -31,45 +31,96 @@ $(document).ready(async () => {
     const bookDoc = resultGetBook.result;
     const pathToFile = `/books/${bookDoc._id}/book-file.pdf`;
 
-    // await PDFViewerApplication.open(pathToFile);
-    // PDFViewerApplication.pdfLinkService.goToPage(2);
+    await PDFViewerApplication.open(pathToFile);
 
+    // PDFViewerApplication.pdfLinkService.goToPage(2);
     // PDFViewerApplication.pdfViewer.currentPageNumber
 
     document.title = `Book ${bookDoc.name}`;
 
-    /*
-    PDFViewerApplication.pdfOutlineViewer.eventBus._on('pagerendered', () => {
-      setTimeout(() => {
-        const currentPage = PDFViewerApplication.pdfViewer.currentPageNumber;
-        // processPage(currentPage - 1);
-      }, 3000);
-    });
-
-    PDFViewerApplication.pdfOutlineViewer.eventBus._on('pagechanging', evt => {
-      const { pageNumber } = evt;
-
-      const doesPageNumberProcessed = processedPages.includes(pageNumber);
-
-      if (!doesPageNumberProcessed) {
-        // processPage(pageNumber - 1);
-      }
-    });
-    */
-
     $readBookContainer
-      .on('touchend', () => {
+      .on('click', async (e) => {
         const text = autoSelectText();
-        alert(text);
 
-        if (window.getSelection().empty) {  // Chrome
-          window.getSelection().empty();
-        } else if (window.getSelection().removeAllRanges) {  // Firefox
-          window.getSelection().removeAllRanges();
+        if (text) {
+          const translations = await translatePhrase(text);
+          const translation = translations ? translations[0] : '';
+
+          const {
+            clientX,
+            clientY,
+          } = e;
+
+          $addPhrase.find('span.phrase').text(text);
+          $addPhrase.find('span.translation').text(translation);
+
+          $addPhrase
+            .css({
+              left: clientX - ($addPhrase.width() / 2),
+              top: clientY + 20,
+            })
+            .addClass('is_active');
+        }
+      });
+      /*
+      .on('touchend', () => {
+        console.log('touchend');
+        const sel = window.getSelection();
+
+        if (sel.rangeCount > 0) {
+          const range = sel.getRangeAt(0);
+
+          if (range.toString()) {
+            const selParentEl = range.commonAncestorContainer;
+
+            if (selParentEl.nodeType === 3) {
+              alert(`touchend: ${sel.toString()}`);
+            }
+          }
+        }
+      });
+      */
+
+    $addPhrase
+      .on('click', 'button.close', () => {
+        $addPhrase.removeClass('is_active');
+      })
+      .on('click', 'button.save', async () => {
+        const phrase = $addPhrase.find('.phrase').text().trim();
+        const translation = $addPhrase.find('.translation').text().trim();
+
+        let isGreenLight = true;
+
+        if (!phrase) {
+          isGreenLight = false;
+          alert('No phrase');
         }
 
-        // const selectedText = window.getSelection();
-        // alert(selectedText.toString());
+        if (!translation) {
+          isGreenLight = false;
+          alert('No translation');
+        }
+
+        if (!isGreenLight) {
+          return false;
+        }
+
+        $addPhrase.removeClass('is_active');
+
+        const resultAddUserPhrase = await makeRequest({
+          method: 'POST',
+          url: URL_SAVE_USER_PHRASE,
+
+          body: {
+            phrase,
+            translation,
+          },
+        });
+
+        if (!resultAddUserPhrase || !resultAddUserPhrase.status) {
+          alert(resultAddUserPhrase.message || `Cant makeRequest ${URL_SAVE_USER_PHRASE}`);
+          return false;
+        }
       });
   } catch (err) {
     alert(err.message);
@@ -82,6 +133,10 @@ const autoSelectText = () => {
   const node = s.anchorNode;
 
   while (range.toString().indexOf(' ') !== 0) {
+    if (!range.startOffset) {
+      break;
+    }
+
     range.setStart(node, range.startOffset - 1);
   }
 
@@ -105,6 +160,24 @@ const autoSelectText = () => {
   }
 
   return range.toString().trim();
+};
+
+const translatePhrase = async phrase => {
+  const resultTranslate = await makeRequest({
+    method: 'POST',
+    url: URL_TRANSLATE_PHRASE,
+
+    body: {
+      phrase: phrase.trim(),
+    },
+  });
+
+  if (!resultTranslate || !resultTranslate.status) {
+    alert(resultTranslate.message || `Cant makeRequest ${URL_TRANSLATE_PHRASE}`);
+    return false;
+  }
+
+  return resultTranslate.result || [];
 };
 
 const processPage = pageIndex => {

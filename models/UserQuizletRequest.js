@@ -1,19 +1,12 @@
 const mongoose = require('mongoose');
 
-const UserPhrase = new mongoose.Schema({
+const UserQuizletRequest = new mongoose.Schema({
   user_id: {
     required: true,
     type: mongoose.Schema.ObjectId,
   },
 
-  book_id: mongoose.Schema.ObjectId,
-
   phrase: {
-    type: String,
-    required: true,
-  },
-
-  phrase_translation: {
     type: String,
     required: true,
   },
@@ -31,4 +24,4 @@ const UserPhrase = new mongoose.Schema({
   },
 }, { versionKey: false });
 
-module.exports = mongoose.model('UserPhrase', UserPhrase, 'user-phrases');
+module.exports = mongoose.model('UserQuizletRequest', UserQuizletRequest, 'user-quizlet-requests');

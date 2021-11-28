@@ -228,6 +228,49 @@ input:checked + .slider:before {
   .test .events span {
     display: block; }
 
+.test .add-phrase {
+  flex-direction: column;
+  position: absolute;
+  padding: 15px;
+  background-color: white;
+  box-shadow: 0 5px 20px 0 rgba(0, 0, 0, 0.2);
+  z-index: 99999;
+  display: none; }
+  .test .add-phrase.is_active {
+    display: flex; }
+  .test .add-phrase .row {
+    display: flex; }
+  .test .add-phrase p {
+    margin-bottom: 10px; }
+    .test .add-phrase p span.phrase {
+      font-weight: bold; }
+  .test .add-phrase button.close {
+    position: relative;
+    right: -9px;
+    top: -10px;
+    border: 1px solid black;
+    /* padding: 3px; */
+    border-radius: 300px;
+    width: 22px;
+    height: 22px;
+    text-align: center;
+    display: inline-block;
+    background-color: transparent;
+    cursor: pointer; }
+    .test .add-phrase button.close:hover {
+      background-color: black;
+      color: white; }
+  .test .add-phrase button.save {
+    padding: 7px;
+    font-size: 16px;
+    color: white;
+    background-color: #79c257;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer; }
+    .test .add-phrase button.save:hover {
+      opacity: .8; }
+
 .auth h1 {
   margin-bottom: 10px; }
 
