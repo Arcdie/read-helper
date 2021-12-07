@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon app",
     "build-css": "node-sass --include-path scss public/scss/styles.scss   public/stylesheets/styles.css",
-    "watcher": "nodemon -e scss -x \"npm run build-css\""
+    "watcher": "nodemon -e scss -x \"npm run build-css\"",
+    "production": "pm2 start ./app.js"
   },
   "dependencies": {
     "axios": "^0.21.0",
@@ -27,6 +28,7 @@
     "multer": "^1.4.3",
     "pdf-parse": "^1.1.1",
     "pug": "^3.0.2",
+    "reverso-api": "^2.19.0",
     "serve-favicon": "^2.5.0",
     "validator": "^10.11.0",
     "winston": "^3.2.1"

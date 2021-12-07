@@ -4,6 +4,7 @@ router.use('/test', require('./test'));
 router.use('/books', require('./books'));
 
 router.use('/quizlet', require('./quizlet'));
+router.use('/reverso', require('./reverso'));
 
 router.use('/user-phrases', require('./user-phrases'));
 

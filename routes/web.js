@@ -12,6 +12,7 @@ const commonMiddlewares = [
 
 router.get('/', commonMiddlewares, webControllers.getMainPage);
 router.get('/test', commonMiddlewares, webControllers.getTestPage);
+router.get('/test2', commonMiddlewares, webControllers.getTest2Page);
 
 router.get('/books/:id', commonMiddlewares, webControllers.getBookPage);
 router.get('/books/:id/read', commonMiddlewares, webControllers.getReadBookPage);
