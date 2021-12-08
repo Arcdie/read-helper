@@ -10,6 +10,7 @@ const commonMiddlewares = [
   getUser,
 ];
 
+router.get('/', commonMiddlewares, userPhraseControllers.getUserPhrases);
 router.post('/', commonMiddlewares, userPhraseControllers.createUserPhrase);
 
 module.exports = router;

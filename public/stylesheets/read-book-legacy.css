@@ -6,11 +6,19 @@
   .read-book-legacy button#print {
     display: none;
   }
-
     .read-book-legacy span a {
+
     }
+      .read-book-legacy span a.is_vocabulary {
+        background-color: #ffbd01;
+      }
+
+      .read-book-legacy span a.is_working {
+        background-color: #34ff01;
+      }
+
       .read-book-legacy span a:hover {
-        background-color: #79c257;
+        background-color: #34ff01;
       }
 
 .add-phrase {
