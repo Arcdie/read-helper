@@ -1,9 +1,9 @@
 const router = require('express').Router();
 
-const getUser = require('../middlewares/get-user');
-const getAuthToken = require('../middlewares/get-auth-token');
+const getUser = require('../../middlewares/get-user');
+const getAuthToken = require('../../middlewares/get-auth-token');
 
-const quizletControllers = require('../controllers/quizlet');
+const quizletControllers = require('../../controllers/translate-services/quizlet');
 
 const commonMiddlewares = [
   getAuthToken,

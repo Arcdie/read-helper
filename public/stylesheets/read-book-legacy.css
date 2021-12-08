@@ -3,10 +3,15 @@
   height: 100%;
   position: relative;
 }
-
   .read-book-legacy button#print {
     display: none;
   }
+
+    .read-book-legacy span a {
+    }
+      .read-book-legacy span a:hover {
+        background-color: #79c257;
+      }
 
 .add-phrase {
   flex-direction: column;

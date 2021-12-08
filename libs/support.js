@@ -11,8 +11,13 @@ const generateMongoId = () => {
   return new mongodb.ObjectID();
 };
 
+const getRandomNumber = (min, max) => {
+  return Math.floor(Math.random() * (max - min)) + min;
+};
+
 module.exports = {
   sleep,
   getUnix,
+  getRandomNumber,
   generateMongoId,
 };

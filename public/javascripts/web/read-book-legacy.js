@@ -7,7 +7,9 @@ objects, PDFViewerApplication,
 
 const URL_GET_BOOK_BY_ID = '/api/books';
 const URL_SAVE_USER_PHRASE = '/api/user-phrases';
-const URL_TRANSLATE_PHRASE = '/api/quizlet/translate-phrase';
+const URL_TRANSLATE_PHRASE = '/api/phrase-translations/translate-phrase';
+
+const processedPages = [];
 
 /* JQuery */
 
@@ -36,15 +38,39 @@ $(document).ready(async () => {
     // PDFViewerApplication.pdfLinkService.goToPage(2);
     // PDFViewerApplication.pdfViewer.currentPageNumber
 
+    PDFViewerApplication.pdfOutlineViewer.eventBus._on('pagerendered', () => {
+      setTimeout(() => {
+        const currentPage = PDFViewerApplication.pdfViewer.currentPageNumber;
+        processPage(currentPage - 1);
+      }, 2000);
+    });
+
+    PDFViewerApplication.pdfOutlineViewer.eventBus._on('pagechanging', evt => {
+      const { pageNumber } = evt;
+
+      const doesPageNumberProcessed = processedPages.includes(pageNumber - 1);
+
+      if (!doesPageNumberProcessed) {
+        processPage(pageNumber - 1);
+      }
+    });
+
     document.title = `Book ${bookDoc.name}`;
 
     $readBookContainer
-      .on('click', async (e) => {
-        const text = autoSelectText();
+      .on('click', e => {
+        if (!['a', 'span'].includes(e.target.localName)) {
+          $addPhrase.removeClass('is_active');
+        }
+      })
+      .on('click', 'span a', async function (e) {
+        const text = $(this).text();
 
         if (text) {
-          const translations = await translatePhrase(text);
-          const translation = translations ? translations[0] : '';
+          // const translations = await translatePhrase(text);
+          // const translation = translations ? translations[0] : '';
+
+          const translation = 'Ева, не стучи';
 
           const {
             clientX,
@@ -61,10 +87,8 @@ $(document).ready(async () => {
             })
             .addClass('is_active');
         }
-      });
-      /*
-      .on('touchend', () => {
-        console.log('touchend');
+      })
+      .on('touchend', (e) => {
         const sel = window.getSelection();
 
         if (sel.rangeCount > 0) {
@@ -74,12 +98,41 @@ $(document).ready(async () => {
             const selParentEl = range.commonAncestorContainer;
 
             if (selParentEl.nodeType === 3) {
-              alert(`touchend: ${sel.toString()}`);
+              const text = sel.toString();
+
+              if (!text) {
+                return true;
+              }
+
+              const lWords = text.split(' ');
+
+              if (lWords > 5) {
+                return true;
+              }
+
+              // const translations = await translatePhrase(text);
+              // const translation = translations ? translations[0] : '';
+
+              const translation = 'Ева, не стучи';
+
+              const {
+                clientX,
+                clientY,
+              } = e;
+
+              $addPhrase.find('span.phrase').text(text);
+              $addPhrase.find('span.translation').text(translation);
+
+              $addPhrase
+                .css({
+                  left: clientX - ($addPhrase.width() / 2),
+                  top: clientY + 20,
+                })
+                .addClass('is_active');
             }
           }
         }
       });
-      */
 
     $addPhrase
       .on('click', 'button.close', () => {
@@ -107,6 +160,7 @@ $(document).ready(async () => {
 
         $addPhrase.removeClass('is_active');
 
+        /*
         const resultAddUserPhrase = await makeRequest({
           method: 'POST',
           url: URL_SAVE_USER_PHRASE,
@@ -121,46 +175,12 @@ $(document).ready(async () => {
           alert(resultAddUserPhrase.message || `Cant makeRequest ${URL_SAVE_USER_PHRASE}`);
           return false;
         }
+        */
       });
   } catch (err) {
     alert(err.message);
   }
 });
-
-const autoSelectText = () => {
-  const s = window.getSelection();
-  const range = s.getRangeAt(0);
-  const node = s.anchorNode;
-
-  while (range.toString().indexOf(' ') !== 0) {
-    if (!range.startOffset) {
-      break;
-    }
-
-    range.setStart(node, range.startOffset - 1);
-  }
-
-  range.setStart(node, range.startOffset + 1);
-
-  while (
-    range.toString().indexOf(' ') === -1 &&
-    range.toString().trim() !== '' &&
-    range.endOffset + 1 < s.baseNode.wholeText.length
-  ) {
-    range.setEnd(node, range.endOffset + 1);
-  }
-
-  // remove extra space
-  range.setEnd(node, range.endOffset - 1);
-
-  // remove last selection if is not letter or number
-  const lastChar = range.toString().charAt(range.toString().length - 1);
-  if (!/^[a-zA-Z0-9]*$/.test(lastChar)) {
-    range.setEnd(node, range.endOffset - 1);
-  }
-
-  return range.toString().trim();
-};
 
 const translatePhrase = async phrase => {
   const resultTranslate = await makeRequest({
@@ -181,10 +201,9 @@ const translatePhrase = async phrase => {
 };
 
 const processPage = pageIndex => {
-  // console.log('processPage', pageIndex);
   const $page = $readBookContainer.find('.page').eq(pageIndex);
 
-  if ($page.hasClass('is_processed')) {
+  if (processedPages.includes(pageIndex)) {
     return true;
   }
 
@@ -192,32 +211,17 @@ const processPage = pageIndex => {
 
   $rows.each((index, span) => {
     const $span = $(span);
-    // console.log('$span', $span);
-
     const text = $span.text();
     const arrWords = text.split(' ');
 
-    let newStr = '';
+    let newText = '';
 
     arrWords.forEach(word => {
-      let validWord = word;
-
-      if (!word || [',', '.', '-', ' '].includes(word)) {
-        newStr += word;
-        return true;
-      }
-
-      const lWord = validWord.length;
-
-      if (validWord[lWord - 1] === ',') {
-        validWord = validWord.substring(0, lWord - 1);
-      }
-
-      newStr += `<q>${validWord}</q>`;
+      newText += `<a>${word}</a> `;
     });
 
-    // console.log('newStr', newStr);
-
-    $span.html(newStr);
+    $span.html(newText);
   });
+
+  processedPages.push(pageIndex);
 };

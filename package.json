@@ -10,6 +10,7 @@
     "production": "pm2 start ./app.js"
   },
   "dependencies": {
+    "@vitalets/google-translate-api": "^7.0.0",
     "axios": "^0.21.0",
     "bluebird": "^3.7.2",
     "body-parser": "^1.18.3",
@@ -30,6 +31,7 @@
     "pug": "^3.0.2",
     "reverso-api": "^2.19.0",
     "serve-favicon": "^2.5.0",
+    "tunnel": "0.0.6",
     "validator": "^10.11.0",
     "winston": "^3.2.1"
   },

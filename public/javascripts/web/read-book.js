@@ -45,17 +45,20 @@ $(document).ready(async () => {
         // processPage(currentPage - 1);
       }, 3000);
     });
+    */
 
     PDFViewerApplication.pdfOutlineViewer.eventBus._on('pagechanging', evt => {
       const { pageNumber } = evt;
 
-      const doesPageNumberProcessed = processedPages.includes(pageNumber);
+      console.log('pageNumber', pageNumber);
 
-      if (!doesPageNumberProcessed) {
-        // processPage(pageNumber - 1);
-      }
+      // const doesPageNumberProcessed = processedPages.includes(pageNumber);
+      //
+      // if (!doesPageNumberProcessed) {
+      //   // processPage(pageNumber - 1);
+      // }
     });
-    */
+
 
     /*
     $readBookContainer

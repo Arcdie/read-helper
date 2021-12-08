@@ -20,8 +20,9 @@ $(document).ready(async () => {
       const text = autoSelectText();
 
       if (text) {
-        const translations = await translatePhrase(text);
-        const translation = translations ? translations[0] : '';
+        // const translations = await translatePhrase(text);
+        // const translation = translations ? translations[0] : '';
+        const translation = 'Ева, не стучи';
 
         const {
           clientX,
@@ -82,6 +83,7 @@ $(document).ready(async () => {
 
       $addPhrase.removeClass('is_active');
 
+      /*
       const resultAddUserPhrase = await makeRequest({
         method: 'POST',
         url: URL_SAVE_USER_PHRASE,
@@ -96,6 +98,7 @@ $(document).ready(async () => {
         alert(resultAddUserPhrase.message || `Cant makeRequest ${URL_SAVE_USER_PHRASE}`);
         return false;
       }
+      */
     });
 });
 

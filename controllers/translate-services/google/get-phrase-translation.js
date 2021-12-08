@@ -1,12 +1,16 @@
-const log = require('../../libs/logger');
+const log = require('../../../libs/logger');
 
 const {
   getPhraseTranslation,
 } = require('./utils/get-phrase-translation');
 
 const {
-  createUserQuizletRequest,
-} = require('../user-quizlet-requests/utils/create-user-quizlet-request');
+  createUserSearchRequest,
+} = require('../../user-search-requests/utils/create-user-search-request');
+
+const {
+  TYPES_RESOURCES,
+} = require('../../user-search-requests/constants');
 
 module.exports = async (req, res, next) => {
   const {
@@ -46,41 +50,18 @@ module.exports = async (req, res, next) => {
     });
   }
 
-  await createUserQuizletRequest({
+  const resultCreate = await createUserSearchRequest({
     userId: user._id,
     phrase,
+    typeResource: TYPES_RESOURCES.get('google'),
   });
 
-  const resultPhraseTranslation = resultGetPhraseTranslation.result;
-
-  if (!resultPhraseTranslation
-    || !resultPhraseTranslation.responses || !resultPhraseTranslation.responses.length
-  ) {
-    return res.json({
-      status: true,
-      result: [],
-    });
-  }
-
-  const { data } = resultGetPhraseTranslation.result.responses[0];
-
-  if (!data) {
-    return res.json({
-      status: true,
-      result: [],
-    });
-  }
-
-  if (!data.suggestions.suggestions
-    || !data.suggestions.suggestions.length) {
-    return res.json({
-      status: true,
-      result: [],
-    });
+  if (!resultCreate || !resultCreate.status) {
+    log.warn(resultCreate.message || 'Cant createUserSearchRequest');
   }
 
   return res.json({
     status: true,
-    result: data.suggestions.suggestions.map(suggestion => suggestion.text),
+    result: resultGetPhraseTranslation.result,
   });
 };

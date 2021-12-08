@@ -1,12 +1,13 @@
 const mongoose = require('mongoose');
 
-const UserQuizletRequest = new mongoose.Schema({
-  user_id: {
+const PhraseTranslation = new mongoose.Schema({
+  phrase: {
+    type: String,
     required: true,
-    type: mongoose.Schema.ObjectId,
+    index: true,
   },
 
-  phrase: {
+  translation: {
     type: String,
     required: true,
   },
@@ -24,4 +25,4 @@ const UserQuizletRequest = new mongoose.Schema({
   },
 }, { versionKey: false });
 
-module.exports = mongoose.model('UserQuizletRequest', UserQuizletRequest, 'user-quizlet-requests');
+module.exports = mongoose.model('PhraseTranslation', PhraseTranslation, 'phrase-translations');

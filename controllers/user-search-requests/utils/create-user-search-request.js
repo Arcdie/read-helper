@@ -2,11 +2,16 @@ const {
   isMongoId,
 } = require('validator');
 
-const UserQuizletRequest = require('../../../models/UserQuizletRequest');
+const UserSearchRequest = require('../../../models/UserSearchRequest');
 
-const createUserQuizletRequest = async ({
+const {
+  TYPES_RESOURCES,
+} = require('../constants');
+
+const createUserSearchRequest = async ({
   userId,
   phrase,
+  typeResource,
 }) => {
   if (!userId || !isMongoId(userId.toString())) {
     return {
@@ -22,9 +27,17 @@ const createUserQuizletRequest = async ({
     };
   }
 
-  const newRequest = new UserQuizletRequest({
+  if (!typeResource || !TYPES_RESOURCES.get(typeResource)) {
+    return {
+      status: false,
+      message: 'No or invalid typeResource',
+    };
+  }
+
+  const newRequest = new UserSearchRequest({
     user_id: userId,
     phrase,
+    resource: typeResource,
   });
 
   await newRequest.save();
@@ -36,5 +49,5 @@ const createUserQuizletRequest = async ({
 };
 
 module.exports = {
-  createUserQuizletRequest,
+  createUserSearchRequest,
 };
