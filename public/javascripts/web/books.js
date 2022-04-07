@@ -49,7 +49,7 @@ $(document).ready(async () => {
 
   $bookshelfContainer.append(appendStr);
 
-  const lBooksInLastQueue = queues[queues.length - 1].length;
+  const lBooksInLastQueue = queues.length ? queues[queues.length - 1].length : 0;
 
   const addBookElement = '<a class="add-book" href="/books/add"><img src="/images/add.png" alt="png"></a>';
 

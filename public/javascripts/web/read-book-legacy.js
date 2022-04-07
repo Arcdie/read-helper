@@ -179,9 +179,9 @@ $(document).ready(async () => {
             return true;
           }
 
-          const translation = 'Ева, не стучи';
-          // const translations = await translatePhrase(text);
-          // const translation = translations ? translations[0] : '';
+          // const translation = 'Ева, не стучи';
+          const translations = await translatePhrase(text);
+          const translation = translations ? translations[0] : '';
 
           $addPhrase.find('span.phrase').text(text);
           $addPhrase.find('span.translation').text(translation);
@@ -295,7 +295,12 @@ const processPage = pageIndex => {
     let newText = '';
 
     arrWords.forEach(word => {
-      const isVocabulary = userPhrases.some(bound => bound.phrase === word) ? 'is_vocabulary' : '';
+      const validWord = word.replace(/[.,]/g, '');
+
+      const isVocabulary = userPhrases.some(
+        bound => bound.phrase === validWord,
+      ) ? 'is_vocabulary' : '';
+
       newText += `<a class="${isVocabulary}">${word}</a> `;
     });
 
