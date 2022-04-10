@@ -65,7 +65,12 @@
         width: 100%;
         margin-bottom: 10px;
         display: flex;
+        opacity: 0.3;
         justify-content: space-between;
+
+        &.active {
+          opacity: 1;
+        }
 
         .text {
           width: 70%;

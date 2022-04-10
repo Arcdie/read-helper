@@ -35,10 +35,7 @@ module.exports = async (req, res, next) => {
     findObj.book_id = bookId;
   }
 
-  const userPhrases = await UserPhrase.find(findObj, {
-    phrase: 1,
-    phrase_translation: 1,
-  }).exec();
+  const userPhrases = await UserPhrase.find(findObj).exec();
 
   return res.json({
     status: true,

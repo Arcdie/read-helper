@@ -1,5 +1,5 @@
 /* global
-functions, makeRequest, copyToClipboard
+functions, makeRequest, copyToClipboard, saveAs
 objects,
 */
 
@@ -7,6 +7,7 @@ objects,
 
 const URL_GET_USER_PHRASES = '/api/user-phrases';
 const URL_REMOVE_USER_PHRASES = '/api/user-phrases';
+const URL_CHANGE_ACTIVE_STATUS_USER_PHRASES = '/api/user-phrases/active';
 
 /* JQuery */
 
@@ -26,20 +27,19 @@ $(document).ready(async () => {
 
   const userPhrases = resultGetPhrases.result;
 
-  userPhrases.forEach(userPhrase => {
-    userPhrase.is_active = true;
-  });
-
   renderWords(userPhrases);
 
   $navigation
     .find('button.convert')
-    .on('click', () => {
+    .on('click', async () => {
       let text = '';
+
+      const userPhraseIds = [];
 
       $words.find('.word').each((index, e) => {
         const $word = $(e);
 
+        const userPhraseId = $word.data('id');
         const isActive = $word.find('.settings input[type="checkbox"]').prop('checked');
 
         if (isActive) {
@@ -53,16 +53,35 @@ $(document).ready(async () => {
           } else {
             text += `\n${word}\t${translation}`;
           }
+
+          userPhraseIds.push(userPhraseId);
         }
       });
 
-      const file = new File(
-        [text],
-        'text-for-quizlet.txt',
-        { type: 'text/plain;charset=utf-8' },
-      );
+      if (userPhraseIds.length) {
+        const resultChangeActiveStatus = await makeRequest({
+          method: 'PUT',
+          url: URL_CHANGE_ACTIVE_STATUS_USER_PHRASES,
 
-      saveAs(file);
+          body: {
+            isActive: false,
+            userPhraseIds,
+          },
+        });
+
+        if (!resultChangeActiveStatus || !resultChangeActiveStatus.status) {
+          alert(resultChangeActiveStatus.message || `Cant makeRequest ${URL_CHANGE_ACTIVE_STATUS_USER_PHRASES}`);
+          return false;
+        }
+
+        const file = new File(
+          [text],
+          'text-for-quizlet.txt',
+          { type: 'text/plain;charset=utf-8' },
+        );
+
+        saveAs(file);
+      }
     });
 
   $words
@@ -81,6 +100,32 @@ $(document).ready(async () => {
       }
 
       $word.remove();
+    })
+    .on('click', 'input[type="checkbox"]', async function () {
+      const $word = $(this).closest('.word');
+      const isActive = $(this).prop('checked');
+      const userPhraseId = $word.data('id');
+
+      if (isActive) {
+        $word.addClass('active');
+      } else {
+        $word.removeClass('active');
+      }
+
+      const resultChangeActiveStatus = await makeRequest({
+        method: 'PUT',
+        url: URL_CHANGE_ACTIVE_STATUS_USER_PHRASES,
+
+        body: {
+          isActive,
+          userPhraseIds: [userPhraseId],
+        },
+      });
+
+      if (!resultChangeActiveStatus || !resultChangeActiveStatus.status) {
+        alert(resultChangeActiveStatus.message || `Cant makeRequest ${URL_CHANGE_ACTIVE_STATUS_USER_PHRASES}`);
+        return false;
+      }
     });
 });
 
@@ -88,7 +133,10 @@ const renderWords = (userPhrases = []) => {
   let appendStr = '';
 
   userPhrases.forEach(userPhrase => {
-    appendStr += `<div class="word" data-id="${userPhrase._id}">
+    appendStr += `<div
+      data-id="${userPhrase._id}"
+      class="word ${userPhrase.is_active ? 'active' : ''}"
+    >
       <div class="text">
         <input type="text" placeholder="Eng" value="${userPhrase.phrase}">
         <span>-></span>
@@ -96,7 +144,7 @@ const renderWords = (userPhrases = []) => {
       </div>
 
       <div class="settings">
-        <input type="checkbox" checked="checked">
+        <input type="checkbox" ${userPhrase.is_active && 'checked="checked"'}>
         <button class="remove">x</button>
       </div>
     </div>`;
