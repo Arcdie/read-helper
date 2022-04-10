@@ -43,7 +43,7 @@ $(document).ready(async () => {
         appendBooksStr += `<a class="book" href="/books/${bookDoc._id}">
           <img src="${bookDoc.path_to_book}/book-cover-image.png" alt="harry-potter" />
           <p>${bookDoc.name}</p>
-        </div>`;
+        </a>`;
       });
 
       appendStr += `<div class="shelf">${appendBooksStr}</div>`;

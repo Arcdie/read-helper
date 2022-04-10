@@ -9,6 +9,10 @@ const URL_GET_USER_PHRASES = '/api/user-phrases';
 const URL_REMOVE_USER_PHRASES = '/api/user-phrases';
 const URL_CHANGE_ACTIVE_STATUS_USER_PHRASES = '/api/user-phrases/active';
 
+/* Variables */
+
+const bookId = location.pathname.split('/')[2];
+
 /* JQuery */
 
 const $words = $('.words');
@@ -18,6 +22,9 @@ $(document).ready(async () => {
   const resultGetPhrases = await makeRequest({
     method: 'GET',
     url: URL_GET_USER_PHRASES,
+    query: {
+      bookId,
+    },
   });
 
   if (!resultGetPhrases || !resultGetPhrases.status) {

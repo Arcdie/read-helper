@@ -40,7 +40,7 @@ module.exports = async (req, res, next) => {
   const bookDoc = resultGetBook.result;
 
   res.render('web/read-book-page-legacy', {
-    pageTitle: `Book ${bookDoc.name}`,
+    pageTitle: `${bookDoc.name}`,
     bookDoc,
   });
 };
