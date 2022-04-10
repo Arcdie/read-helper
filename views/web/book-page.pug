@@ -5,9 +5,26 @@ block variables
 block content
 	.page.book
 		.row
-			.book-cover
-				img(src= `${bookDoc.path_to_book}/book-cover-image.png`, alt='book-cover')
-				a.read(href= `/books/${bookDoc._id}/read`) Read
+			.container
+				.book-cover
+					img(src= `${bookDoc.path_to_book}/book-cover-image.png`, alt='book-cover')
+					a.read(href= `/books/${bookDoc._id}/read`) Read
+					
+				.words-editor
+					.navigation
+						button.convert Convert for quizlet
+						
+					.words
+						//- .word
+						//- 	.text
+						//- 		input(type="text" placeholder="Eng")
+						//- 		input(type="text" placeholder="Rus")
+						//- 
+						//- 	.settings
+						//- 		input(type="checkbox")
+						//- 		button.remove x				
 
 block scripts
+	script(src='/libs/file-saver.min.js')
+
 	script(src='/javascripts/web/book.js')

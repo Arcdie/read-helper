@@ -13,4 +13,6 @@ const commonMiddlewares = [
 router.get('/', commonMiddlewares, userPhraseControllers.getUserPhrases);
 router.post('/', commonMiddlewares, userPhraseControllers.createUserPhrase);
 
+router.delete('/:id', commonMiddlewares, userPhraseControllers.removeUserPhrase);
+
 module.exports = router;

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const User = new mongoose.Schema({
+const UserBookBound = new mongoose.Schema({
   user_id: {
     required: true,
     type: mongoose.Schema.ObjectId,
@@ -9,6 +9,11 @@ const User = new mongoose.Schema({
   book_id: {
     required: true,
     type: mongoose.Schema.ObjectId,
+  },
+
+  is_active: {
+    type: Boolean,
+    default: true,
   },
 
   created_at: {
@@ -24,4 +29,4 @@ const User = new mongoose.Schema({
   },
 }, { versionKey: false });
 
-module.exports = mongoose.model('User', User, 'users');
+module.exports = mongoose.model('UserBookBound', UserBookBound, 'user-book-bounds');

@@ -27,34 +27,37 @@ $(document).ready(async () => {
   const booksDocs = resultGetBooks.result;
   const lBooks = booksDocs.length;
 
-  const numberShelfs = lBooks / BOOKS_ON_SHELF;
-  const queues = getQueue(booksDocs, BOOKS_ON_SHELF);
-
   let appendStr = '';
-
-  for (let i = 0; i < numberShelfs; i += 1) {
-    const targetQueue = queues[i];
-
-    let appendBooksStr = '';
-
-    targetQueue.forEach(bookDoc => {
-      appendBooksStr += `<a class="book" href="/books/${bookDoc._id}">
-        <img src="${bookDoc.path_to_book}/book-cover-image.png" alt="harry-potter" />
-        <p>${bookDoc.name}</p>
-      </div>`;
-    });
-
-    appendStr += `<div class="shelf">${appendBooksStr}</div>`;
-  }
-
-  $bookshelfContainer.append(appendStr);
-
-  const lBooksInLastQueue = queues.length ? queues[queues.length - 1].length : 0;
-
   const addBookElement = '<a class="add-book" href="/books/add"><img src="/images/add.png" alt="png"></a>';
 
-  if (lBooksInLastQueue < BOOKS_ON_SHELF) {
-    $bookshelfContainer.find('.shelf').last().append(addBookElement);
+  if (lBooks) {
+    const numberShelfs = lBooks / BOOKS_ON_SHELF;
+    const queues = getQueue(booksDocs, BOOKS_ON_SHELF);
+
+    for (let i = 0; i < numberShelfs; i += 1) {
+      const targetQueue = queues[i];
+
+      let appendBooksStr = '';
+
+      targetQueue.forEach(bookDoc => {
+        appendBooksStr += `<a class="book" href="/books/${bookDoc._id}">
+          <img src="${bookDoc.path_to_book}/book-cover-image.png" alt="harry-potter" />
+          <p>${bookDoc.name}</p>
+        </div>`;
+      });
+
+      appendStr += `<div class="shelf">${appendBooksStr}</div>`;
+    }
+
+    $bookshelfContainer.append(appendStr);
+
+    const lBooksInLastQueue = queues.length ? queues[queues.length - 1].length : 0;
+
+    if (lBooksInLastQueue < BOOKS_ON_SHELF) {
+      $bookshelfContainer.find('.shelf').last().append(addBookElement);
+    } else {
+      $bookshelfContainer.append(`<div class="shelf">${addBookElement}</div>`);
+    }
   } else {
     $bookshelfContainer.append(`<div class="shelf">${addBookElement}</div>`);
   }

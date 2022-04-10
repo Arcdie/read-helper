@@ -285,9 +285,16 @@ input:checked + .slider:before {
 .book {
   display: flex; }
   .book .row {
+    width: 100%;
     display: flex; }
+  .book .container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between; }
   .book .book-cover {
-    width: 300px; }
+    width: 15%;
+    display: flex;
+    flex-direction: column; }
     .book .book-cover img {
       width: 100%; }
     .book .book-cover a.read {
@@ -303,6 +310,41 @@ input:checked + .slider:before {
       .book .book-cover a.read:hover {
         background-color: black;
         color: white; }
+  .book .words-editor {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black; }
+    .book .words-editor .navigation {
+      width: 100%;
+      height: 50px;
+      border-bottom: 1px solid black;
+      display: flex;
+      padding: 10px;
+      justify-content: flex-end;
+      box-sizing: border-box; }
+    .book .words-editor .words {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 10px; }
+      .book .words-editor .words .word {
+        width: 100%;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between; }
+        .book .words-editor .words .word .text {
+          width: 70%; }
+          .book .words-editor .words .word .text span {
+            margin-right: 10px; }
+          .book .words-editor .words .word .text input[type="text"] {
+            width: 40%;
+            padding: 5px;
+            margin-right: 10px; }
+        .book .words-editor .words .word .settings input[type="checkbox"] {
+          margin-right: 10px;
+          position: relative;
+          top: 3px; }
 
 .books .bookshelf-container {
   width: 100%; }

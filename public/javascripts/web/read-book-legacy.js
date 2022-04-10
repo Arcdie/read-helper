@@ -179,7 +179,6 @@ $(document).ready(async () => {
             return true;
           }
 
-          // const translation = 'Ева, не стучи';
           const translations = await translatePhrase(text);
           const translation = translations ? translations[0] : '';
 

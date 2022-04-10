@@ -27,9 +27,10 @@ app.set('view engine', 'pug');
 app.use(favicon(path.join(frontFolder, '/public/images', 'favicon.ico')));
 
 // bodyParser
-app.use(bodyParser.json({}));
+app.use(bodyParser.json({ limit: '20mb' }));
 app.use(bodyParser.urlencoded({
   extended: false,
+  limit: '20mb',
 }));
 
 app.use(express.static(`${frontFolder}/public`));

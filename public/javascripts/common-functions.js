@@ -34,6 +34,15 @@ const initPopWindow = (str) => {
   classie.add($modalWindow);
 };
 
+const copyToClipboard = (text) => {
+  const $input = $('<input type="text">');
+  $('body').append($input);
+  $input.val(text).select();
+
+  document.execCommand('copy');
+  $input.remove();
+};
+
 const makeRequest = async ({
   url, method, query, body, settings,
 }) => {

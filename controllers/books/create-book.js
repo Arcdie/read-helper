@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const Book = require('../../models/Book');
+const UserBookBound = require('../../models/UserBookBound');
 
 module.exports = async (req, res, next) => {
   const {
@@ -56,6 +57,13 @@ module.exports = async (req, res, next) => {
   newBook.path_to_book = `/books/${newBookId}`;
 
   await newBook.save();
+
+  const newBound = new UserBookBound({
+    user_id: user._id,
+    book_id: newBook._id,
+  });
+
+  await newBound.save();
 
   fs.mkdirSync(pathToBook);
 
