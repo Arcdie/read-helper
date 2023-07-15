@@ -1,10 +1,10 @@
 {
   "name": "Read-Helper",
   "version": "1.0.0",
-  "description": "Helper for read",
+  "description": "Helper for reading, watching",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon app",
+    "start": "nodemon app",
     "build-css": "node-sass --include-path scss public/scss/styles.scss   public/stylesheets/styles.css",
     "watcher": "nodemon -e scss -x \"npm run build-css\"",
     "production": "pm2 start ./app.js"

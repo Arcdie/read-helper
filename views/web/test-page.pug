@@ -3,26 +3,34 @@ extends ../app
 block variables
 	-
 		const pageTitle = 'Test';
+		const linkVideo = 'https://cometa.stream.voidboost.cc/0b0d283dcde4a56fc6f5a3d5771cea5a:2023070808:NE90T2t2TkRjUWcyRnFqU0VOdXN2ZWtKVlZ4UzhYeDIyem9BbUJXQjY0WTBYYUtHd202Tk5Ja1B5N2VGVm5Sb0N3dHExVDFDYXE3MWUrRCtIQkJ3SUE9PQ==/3/4/5/6/0/6/yo3te.mp4';
+		const linkSubtitles = 'https://static.voidboost.com/view/aPtj085e2fT6feci5cgwuw/1688795625/3/4/5/6/0/6/i6wk003v5dwv.vtt';
 
 block content
+	link(href='/stylesheets/test.css' rel='stylesheet')
+	link(href='/stylesheets/read-book-legacy.css' rel='stylesheet')
+
 	.page.test
-		.text
-			p On the other hand, we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they cannot foresee the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is the same as saying through shrinking from toil and pain. These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice is untrammelled and when nothing prevents our being able to do what we like best, every pleasure is to be welcomed and every pain avoided. But in certain circumstances and owing to the claims of duty or the obligations of business it will frequently occur that pleasures have to be repudiated and annoyances accepted. The wise man therefore always holds in these matters to this principle of selection: he rejects pleasures to secure other greater pleasures, or else he endures pains to avoid worse pains.
-	
-		.events
-		
-		.add-phrase
-			.row
-				p
-					span.phrase animal
-					|  - 
-					span.translation животное
-				
-				button.close x
-				
-			button.save + В словарь
+		.container
+			.video-container
+				video(controls='true' autoplay='true' crossorigin='anonymous', height='auto')
+					source(src= linkVideo type='video/mp4')
+					track(src= linkSubtitles kind='subtitles' srclang='en' label='English' default='')
+
+				.add-phrase
+					.row
+						p
+							span.phrase
+							|  - 
+							span.translation
+						
+						button.close x
+						
+					button.save + В словарь
+
+				.subscriptions
+					p
 
 block scripts
-	//- script(src='/libs/jquery-mobile.min.js')
-
+	script(src='https://code.jquery.com/jquery-3.6.4.min.js')
 	script(src='/javascripts/web/test.js')

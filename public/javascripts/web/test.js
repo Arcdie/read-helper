@@ -3,26 +3,131 @@ functions, makeRequest,
 objects,
 */
 
-/* Constants */
+const URL_TRANSLATE_PHRASE = '/api/phrase-translations/translate-phrase';
 
-const URL_SAVE_USER_PHRASE = '/api/user-phrases';
-const URL_TRANSLATE_PHRASE = '/api/quizlet/translate-phrase';
+const getWindowSize = () => [$(window).width(), $(window).height()];
 
-/* JQuery */
-const $text = $('.text');
-const $events = $('.events');
-
+/* Jquery variables */
+const $container = $('.container');
+const $videoContainer = $('.video-container');
+const $video = $('video');
+const $subscriptions = $('.subscriptions');
+const $subscriptionsText = $subscriptions.find('p');
 const $addPhrase = $('.add-phrase');
 
-$(document).ready(async () => {
-  $text
-    .on('click', async (e) => {
-      const text = autoSelectText();
+/* Constants */
+const DEFAULT_CONTAINER_WIDTH = $container.width();
 
-      if (text) {
-        // const translations = await translatePhrase(text);
-        // const translation = translations ? translations[0] : '';
-        const translation = 'Ева, не стучи';
+const video = $video.get(0);
+const specialSymbols = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+const isTouchScreen = 'ontouchstart' in window || navigator.msMaxTouchPoints;
+
+/* Variables */
+let phraseArr = [];
+
+let [width, height] = getWindowSize();
+const tracks = $video.get(0).textTracks[0];
+tracks.mode = 'hidden';
+
+$(document).ready(async () => {
+  $subscriptions.hide();
+  $container.height(height);
+
+  video
+    .addEventListener('loadedmetadata', () => {
+      for (const i in tracks.cues) {
+        const cue = tracks.cues[i];
+
+        cue.onenter = function () {
+          const coveredArr = this.text
+            .split(' ')
+            .map(w => w && `<span>${w}</span>`);
+
+          $subscriptionsText.html(coveredArr.join(' '));
+          $subscriptions.show();
+        };
+
+        cue.onexit = () => {
+          $subscriptions.hide();
+        };
+      }
+    });
+
+  video.addEventListener('load', function () { this.play(); });
+
+  video.load();
+
+  $(window).on('resize', () => {
+    [width, height] = getWindowSize();
+
+    const isFullScreenEnabled = isFullScreen();
+
+    if (!isFullScreenEnabled) {
+      $videoContainer
+        .width(DEFAULT_CONTAINER_WIDTH);
+
+      $container
+        .removeClass('fullscreen');
+    } else {
+      $videoContainer
+        .width(width);
+
+      $container
+        .addClass('fullscreen');
+    }
+
+    $container.height(height);
+  });
+
+  $(document)
+    .on('keypress', async e => {
+      if (e.keyCode === 102) {
+        // F
+        toggleFullScreen();
+      }
+    });
+
+  $addPhrase
+    .on('click', 'button.close', () => {
+      $addPhrase.removeClass('is_active');
+    });
+
+  const eventName = isTouchScreen ? 'dblclick' : 'mouseup';
+
+  if (!isTouchScreen) {
+    $videoContainer
+      .on(eventName, '.subscriptions span', async (e) => {
+        const $target = $(e.target);
+        const sel = window.getSelection();
+        const range = sel.getRangeAt(0);
+
+        let text = range.toString() || $target.text();
+
+        if (!text) {
+          return true;
+        }
+
+        const sentence = text.split(' ');
+        const lWords = sentence.length;
+
+        if (lWords > 5) {
+          return true;
+        }
+
+        if (e.target.localName === 'span') {
+          const wordText = $target.text().trim();
+          const choosenWord = sentence[lWords - 1].trim();
+
+          if (wordText !== choosenWord) {
+            sentence[lWords - 1] = wordText;
+            text = sentence.join(' ');
+          }
+        }
+
+        text = text.replace(/[.,]/g, '');
+
+        const translations = await translatePhrase(text);
+        const translation = translations ? translations[0] : '';
 
         const {
           clientX,
@@ -35,107 +140,60 @@ $(document).ready(async () => {
         $addPhrase
           .css({
             left: clientX - ($addPhrase.width() / 2),
-            top: clientY + 20,
+            top: clientY - 200,
           })
           .addClass('is_active');
-      }
-    })
-    .on('touchend', () => {
-      console.log('touchend');
-      const sel = window.getSelection();
-
-      if (sel.rangeCount > 0) {
-        const range = sel.getRangeAt(0);
-
-        if (range.toString()) {
-          const selParentEl = range.commonAncestorContainer;
-
-          if (selParentEl.nodeType === 3) {
-            alert(`touchend: ${sel.toString()}`);
-          }
-        }
-      }
-    });
-
-  $addPhrase
-    .on('click', 'button.close', () => {
-      $addPhrase.removeClass('is_active');
-    })
-    .on('click', 'button.save', async () => {
-      const phrase = $addPhrase.find('.phrase').text().trim();
-      const translation = $addPhrase.find('.translation').text().trim();
-
-      let isGreenLight = true;
-
-      if (!phrase) {
-        isGreenLight = false;
-        alert('No phrase');
-      }
-
-      if (!translation) {
-        isGreenLight = false;
-        alert('No translation');
-      }
-
-      if (!isGreenLight) {
-        return false;
-      }
-
-      $addPhrase.removeClass('is_active');
-
-      /*
-      const resultAddUserPhrase = await makeRequest({
-        method: 'POST',
-        url: URL_SAVE_USER_PHRASE,
-
-        body: {
-          phrase,
-          translation,
-        },
       });
+  } else {
+    $videoContainer
+      .on('touchend', 'span', async function (e) {
+        const $this = $(this);
 
-      if (!resultAddUserPhrase || !resultAddUserPhrase.status) {
-        alert(resultAddUserPhrase.message || `Cant makeRequest ${URL_SAVE_USER_PHRASE}`);
-        return false;
-      }
-      */
-    });
+        if (!$this.hasClass('is_working')) {
+          $this.addClass('is_working');
+
+          phraseArr.push({
+            $elem: $this,
+            index: $this.index(),
+            text: $this.text().trim(),
+          });
+
+          return true;
+        }
+
+        const text = phraseArr
+          .sort((a, b) => a.index > b.index ? 1 : -1)
+          .map(e => e.text.replace(/[.,]/g, ''))
+          .join(' ')
+          .trim();
+
+        if (!text) {
+          refuseChoice();
+          return true;
+        }
+
+        const lWords = phraseArr.length;
+
+        if (lWords > 5) {
+          refuseChoice();
+          return true;
+        }
+
+        const translations = await translatePhrase(text);
+        const translation = translations ? translations[0] : '';
+
+        $addPhrase.find('span.phrase').text(text);
+        $addPhrase.find('span.translation').text(translation);
+
+        $addPhrase
+          .css({
+            left: e.changedTouches[0].pageX - ($addPhrase.width() / 2),
+            top: e.changedTouches[0].pageY - 200,
+          })
+          .addClass('is_active');
+      });
+  }
 });
-
-const autoSelectText = () => {
-  const s = window.getSelection();
-  const range = s.getRangeAt(0);
-  const node = s.anchorNode;
-
-  while (range.toString().indexOf(' ') !== 0) {
-    if (!range.startOffset) {
-      break;
-    }
-
-    range.setStart(node, range.startOffset - 1);
-  }
-
-  range.setStart(node, range.startOffset + 1);
-
-  while (
-    range.toString().indexOf(' ') === -1 &&
-    range.toString().trim() !== '' &&
-    range.endOffset + 1 < s.baseNode.wholeText.length
-  ) {
-    range.setEnd(node, range.endOffset + 1);
-  }
-
-  // remove extra space
-  range.setEnd(node, range.endOffset - 1);
-
-  // remove last selection if is not letter or number
-  const lastChar = range.toString().charAt(range.toString().length - 1);
-  if (!/^[a-zA-Z0-9]*$/.test(lastChar)) {
-    range.setEnd(node, range.endOffset - 1);
-  }
-
-  return range.toString().trim();
-};
 
 const translatePhrase = async phrase => {
   const resultTranslate = await makeRequest({
@@ -153,4 +211,40 @@ const translatePhrase = async phrase => {
   }
 
   return resultTranslate.result || [];
+};
+
+const refuseChoice = () => {
+  phraseArr = [];
+
+  $addPhrase.removeClass('is_active');
+
+  $videoContainer
+    .find('span.is_working')
+    .removeClass('is_working');
+};
+
+const toggleFullScreen = () => !isFullScreen() ? openFullScreen() : closeFullScreen();
+
+const isFullScreen = () => (document.fullScreenElement && document.fullScreenElement !== null) || document.mozFullScreen || document.webkitIsFullScreen;
+
+const openFullScreen = () => {
+  const elem = document.documentElement;
+
+  if (elem.requestFullscreen) {
+    elem.requestFullscreen();
+  } else if (elem.webkitRequestFullscreen) {
+    elem.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) {
+    elem.msRequestFullscreen();
+  }
+};
+
+const closeFullScreen = () => {
+  if (document.exitFullscreen) {
+    document.exitFullscreen();
+  } else if (document.webkitExitFullscreen) { /* Safari */
+    document.webkitExitFullscreen();
+  } else if (document.msExitFullscreen) { /* IE11 */
+    document.msExitFullscreen();
+  }
 };

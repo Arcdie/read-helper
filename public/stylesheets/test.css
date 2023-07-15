@@ -1,26 +1,64 @@
-.read-book-legacy {
-  width: 100%;
-  height: 100%;
+* {
+  padding: 0;
+  margin: 0;
+}
+
+*:focus {
+  outline: none;
+}
+
+.page {
+  padding: 0;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.container.fullscreen {
+  background-color: black;
+}
+
+.video-container {
+  width: 1000px;
+  margin: 0 auto;
   position: relative;
 }
 
-.read-book-legacy button#print {
-  display: none;
+video {
+  width: 100%;
+  position: relative;
+  z-index: 1;
 }
 
-.read-book-legacy span a {}
-
-.read-book-legacy span a.is_vocabulary {
-  background-color: #ffbd01;
+.subscriptions {
+  width: 100%;
+  position: absolute;
+  bottom: 110px;
+  z-index: 2;
+  background-color: rgba(0, 0, 0, .3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
 }
 
-.read-book-legacy span a.is_working {
-  background-color: #34ff01;
+.subscriptions p {
+  color: white;
+  font-size: 40px;
 }
 
-.read-book-legacy span a:hover {
-  background-color: #34ff01;
+.subscriptions p span {
+  cursor: pointer;
 }
+
+.subscriptions p span:hover {
+  color: #00d0ff;
+}
+
+/* add-phrase */
 
 .add-phrase {
   flex-direction: column;
